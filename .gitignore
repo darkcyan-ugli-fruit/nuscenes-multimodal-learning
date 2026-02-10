@@ -1,0 +1,6 @@
+# Remvoe specific folder
+#data/
+
+
+# Remove specific file 
+# notebooks/02_autoencoder_notes.ipynb
