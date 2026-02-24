@@ -1,6 +1,8 @@
 # Remvoe specific folder
-#data/
+data/
+archive/
 
 
 # Remove specific file 
-# notebooks/02_autoencoder_notes.ipynb
+notebooks/nuscenes_tutorial.ipynb
+/v1.0-mini.tgz
