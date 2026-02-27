@@ -5,4 +5,5 @@ archive/
 
 # Remove specific file 
 notebooks/nuscenes_tutorial.ipynb
+notebooks/nuscenes_lidarseg_panoptic_tutorial.ipynb
 /v1.0-mini.tgz
