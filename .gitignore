@@ -1,9 +1,32 @@
-# Remvoe specific folder
-data/
-archive/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
+# Jupyter
+.ipynb_checkpoints/
+
+# Training outputs
+work_dirs/
+outputs/
+logs/
+
+# Dataset archives
+*.tgz
+*.tar
+*.tar.gz
+*.zip
+
+# Remvoe specific folder
+archive/
+data/
 
 # Remove specific file 
 notebooks/nuscenes_tutorial.ipynb
 notebooks/nuscenes_lidarseg_panoptic_tutorial.ipynb
-/v1.0-mini.tgz
+
+
+
+
+external/mmdetection3d/
