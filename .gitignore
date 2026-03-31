@@ -21,6 +21,7 @@ logs/
 # Remvoe specific folder
 archive/
 data/
+cache/
 
 # Remove specific file 
 notebooks/nuscenes_tutorial.ipynb
