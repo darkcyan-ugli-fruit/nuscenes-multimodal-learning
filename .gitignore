@@ -18,16 +18,34 @@ logs/
 *.tar.gz
 *.zip
 
-# Remvoe specific folder
+# Data and cache
 archive/
 data/
 cache/
 
-# Remove specific file 
+# Checkpoints and generated metadata
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.log
+*.log.json
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Specific notebooks
 notebooks/nuscenes_tutorial.ipynb
 notebooks/nuscenes_lidarseg_panoptic_tutorial.ipynb
 
-
-
-
+# External dependency repo
 external/mmdetection3d/
