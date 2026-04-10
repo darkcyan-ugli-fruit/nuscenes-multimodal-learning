@@ -1,3 +1,8 @@
+# Ubelix environment
+module load Anaconda3 
+eval "$(conda shell.bash hook)"
+conda activate py38_mmdet3d
+
 # nuscenes-multimodal-learning
 
 
