@@ -1,8 +1,0 @@
-
-CondaError: Run 'conda init' before 'conda activate'
-
-/storage/homefs/ae04q066/.conda/envs/py38_mmdet3d/lib/python3.8/site-packages/mmengine/optim/optimizer/zero_optimizer.py:11: DeprecationWarning: `TorchScript` support for functional optimizers is deprecated and will be removed in a future PyTorch release. Consider using the `torch.compile` optimizer instead.
-  from torch.distributed.optim import \
-/storage/homefs/ae04q066/.conda/envs/py38_mmdet3d/lib/python3.8/site-packages/mmdet3d/evaluation/functional/kitti_utils/eval.py:10: NumbaDeprecationWarning: [1mThe 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.[0m
-  def get_thresholds(scores: np.ndarray, num_gt, num_sample_pts=41):
-slurmstepd: error: *** JOB 1607301 ON gnode28 CANCELLED AT 2026-04-10T20:07:18 ***

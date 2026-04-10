@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=lidar_20pct
-#SBATCH --output=/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/lidar_20pct_%j.out
-#SBATCH --error=/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/lidar_20pct_%j.err
+#SBATCH --output=/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/lidar_20pct/job_%j.out
+#SBATCH --error=/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/lidar_20pct/job_%j.err
 #SBATCH --time=12:00:00
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=h100:1
