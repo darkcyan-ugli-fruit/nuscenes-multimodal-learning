@@ -14,9 +14,10 @@ conda activate py38_mmdet3d
 cd /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d
 echo "Working directory: $(pwd)"
 
-CHECKPOINT_PATH="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/lidar_baseline_nuscenes_20pct/latest.pth"
+LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/lidar_baseline_nuscenes_20pct/last_checkpoint"
 
-if [ -f "$CHECKPOINT_PATH" ]; then
+if [ -f "$LAST_CHECKPOINT_FILE" ]; then
+    CHECKPOINT_PATH=$(cat "$LAST_CHECKPOINT_FILE")
     echo "Resuming training from $CHECKPOINT_PATH"
     python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/lidar_baseline_nuscenes_20pct.py \
         --resume "$CHECKPOINT_PATH"
