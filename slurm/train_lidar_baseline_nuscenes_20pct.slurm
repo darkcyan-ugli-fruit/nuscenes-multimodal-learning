@@ -18,9 +18,9 @@ CHECKPOINT_PATH="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/
 
 if [ -f "$CHECKPOINT_PATH" ]; then
     echo "Resuming training from $CHECKPOINT_PATH"
-    python tools/train.py configs/my_experiments/lidar_baseline_nuscenes_20pct.py \
+    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/lidar_baseline_nuscenes_20pct.py \
         --resume "$CHECKPOINT_PATH"
 else
     echo "No checkpoint found. Starting fresh training run."
-    python tools/train.py configs/my_experiments/lidar_baseline_nuscenes_20pct.py
+    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/lidar_baseline_nuscenes_20pct.py
 fi
