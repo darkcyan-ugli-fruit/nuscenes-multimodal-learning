@@ -62,3 +62,8 @@ sbatch slurm/scratch_refresh/refresh_nuscenes.slurm
 
 
 git clone https://github.com/open-mmlab/mmdetection3d.git external/mmdetection3d
+
+
+## mmcv install
+
+TODO
