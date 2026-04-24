@@ -31,6 +31,10 @@ cache/
 *.log
 *.log.json
 
+# SLURM outputs
+*.out
+*.err
+
 # Environments
 .venv/
 venv/
