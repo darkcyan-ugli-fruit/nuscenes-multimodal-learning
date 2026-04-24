@@ -22,7 +22,7 @@
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
 
-#SBATCH --time=04:00:00
+#SBATCH --time=05:50:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 
