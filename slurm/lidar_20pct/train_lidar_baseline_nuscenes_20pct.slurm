@@ -2,7 +2,7 @@
 #
 # Description:
 #   CenterPoint LiDAR-only training on nuScenes (20% subset)
-#   using A100 on UBELIX.
+#   using RTX4090 on UBELIX.
 #
 # Usage:
 #   sbatch /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/lidar_20pct/train_lidar_baseline_nuscenes_20pct.slurm
@@ -22,11 +22,16 @@
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
 
-#SBATCH --time=05:50:00
+#SBATCH --time=06:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 
+# GPU selection
 #SBATCH --gres=gpu:a100:1
+##SBATCH --gres=gpu:h100:1
+##SBATCH --gres=gpu:rtx4090:1
+
+
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=48G
 
