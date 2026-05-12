@@ -55,7 +55,7 @@ which python
 python --version
 nvidia-smi
 
-LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/lidar_baseline_nuscenes_20pct_rtx4090_run2/last_checkpoint"
+LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/lidar_baseline_nuscenes_20pct/last_checkpoint"
 
 if [ -f "$LAST_CHECKPOINT_FILE" ]; then
     CHECKPOINT_PATH=$(cat "$LAST_CHECKPOINT_FILE")
