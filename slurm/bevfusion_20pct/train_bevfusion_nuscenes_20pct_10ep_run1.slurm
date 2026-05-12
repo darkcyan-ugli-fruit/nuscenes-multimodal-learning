@@ -1,11 +1,11 @@
 #!/bin/bash
 #
 # Description:
-#   BEVFusion training on nuScenes (20% subset)
+#   bevfusion training on nuScenes (20pct subset)
 #   using A100 (preemptable) on UBELIX.
 #
 # Usage:
-#   sbatch /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/bevfusion_20pct/train_bevfusion_nuscenes_20pct.slurm
+#   sbatch /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/bevfusion_20pct/train_bevfusion_nuscenes_20pct_10ep_run1.slurm
 #
 # Check job:
 #   squeue -u $USER
@@ -22,7 +22,7 @@
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
 
-#SBATCH --time=05:50:00
+#SBATCH --time=06:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 
@@ -32,7 +32,7 @@
 
 set -eo pipefail
 
-# Proper conda initialization (CRITICAL)
+# Proper conda initialization
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate py38_mmdet3d
 
@@ -42,6 +42,10 @@ export PYTHONPATH="$PWD:$PYTHONPATH"
 echo "========================================"
 echo "Job ID: $SLURM_JOB_ID"
 echo "Host: $(hostname)"
+echo "Model: bevfusion"
+echo "Subset: 20pct"
+echo "GPU: a100"
+echo "Max epochs: 10"
 echo "Start time: $(date)"
 echo "========================================"
 
@@ -49,13 +53,16 @@ which python
 python --version
 nvidia-smi
 
-LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct/last_checkpoint"
+LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct_10ep_run1/last_checkpoint"
 
 if [ -f "$LAST_CHECKPOINT_FILE" ]; then
     CHECKPOINT_PATH=$(cat "$LAST_CHECKPOINT_FILE")
     echo "Resuming from $CHECKPOINT_PATH"
-    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py         --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct         --resume "$CHECKPOINT_PATH"
+    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py \
+        --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct_10ep_run1 \
+        --resume "$CHECKPOINT_PATH"
 else
     echo "Starting fresh training"
-    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py     --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct
+    python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py \
+        --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct_10ep_run1
 fi
