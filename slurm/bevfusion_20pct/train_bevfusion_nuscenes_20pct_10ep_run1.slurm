@@ -2,7 +2,7 @@
 #
 # Description:
 #   bevfusion training on nuScenes (20pct subset)
-#   using A100 (preemptable) on UBELIX.
+#   using A100 on UBELIX.
 #
 # Usage:
 #   sbatch /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/slurm/bevfusion_20pct/train_bevfusion_nuscenes_20pct_10ep_run1.slurm
@@ -32,7 +32,6 @@
 
 set -eo pipefail
 
-# Proper conda initialization
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate py38_mmdet3d
 
@@ -58,11 +57,14 @@ LAST_CHECKPOINT_FILE="/storage/homefs/ae04q066/projects/nuscenes-multimodal-lear
 if [ -f "$LAST_CHECKPOINT_FILE" ]; then
     CHECKPOINT_PATH=$(cat "$LAST_CHECKPOINT_FILE")
     echo "Resuming from $CHECKPOINT_PATH"
+
     python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py \
         --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct_10ep_run1 \
         --resume "$CHECKPOINT_PATH"
+
 else
     echo "Starting fresh training"
+
     python tools/train.py /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/configs/my_experiments/bevfusion_nuscenes_20pct.py \
         --work-dir /storage/homefs/ae04q066/projects/nuscenes-multimodal-learning/external/mmdetection3d/work_dirs/bevfusion_nuscenes_20pct_10ep_run1
 fi
