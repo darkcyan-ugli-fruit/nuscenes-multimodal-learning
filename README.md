@@ -3,6 +3,10 @@
 
 ## Project Overview
 
+This project investigates multimodal 3D object detection for autonomous driving using the nuScenes dataset. The work focuses on comparing a LiDAR-only baseline with a camera–LiDAR fusion approach through controlled experiments on reduced dataset subsets.
+
+### nuScenes Dataset
+
 The nuScenes dataset is a large-scale multimodal autonomous driving dataset composed of 1000 driving scenes including:
 - LiDAR data
 - Camera data
@@ -10,6 +14,14 @@ The nuScenes dataset is a large-scale multimodal autonomous driving dataset comp
 - Global Positioning System (GPS) information
 - High-definition map information
 - 3D object annotations
+
+The full train/validation dataset contains:
+- approximately 1.4 million camera images
+- more than 390,000 LiDAR sweeps
+
+The nuScenes test set does not provide public annotations, requiring prediction submission to the official nuScenes evaluation server for final benchmark evaluation.
+
+### nuScenes Tasks
 
 The nuScenes benchmark includes several autonomous driving tasks:
 - Detection: 3D object detection and localization
@@ -19,19 +31,41 @@ The nuScenes benchmark includes several autonomous driving tasks:
 - Panoptic Segmentation: joint semantic and instance segmentation
 - Planning: autonomous driving trajectory planning
 
-This project focuses specifically on the 3D object detection task.
+### 3D Object Detection Task
 
-The full train/validation dataset contains approximately 1.4 million camera images and more than 390,000 LiDAR sweeps, representing several hundred gigabytes of data storage. The nuScenes test set does not provide public annotations, requiring prediction submission to the official nuScenes evaluation server for final benchmark evaluation.
+The task considered in this project is 3D object detection for autonomous driving.
 
-This project investigates multimodal 3D object detection for autonomous driving by comparing a LiDAR-only baseline with a camera–LiDAR fusion approach.
+The objective is to detect relevant traffic participants surrounding the ego vehicle and estimate:
+- object class
+- 3D position
+- object dimensions
+- orientation in 3D space
 
-Due to the large storage and computational requirements of the full dataset, reduced subsets (20% and 40%) were generated to accelerate experimentation while maintaining representative training conditions.
+The benchmark evaluates detection performance using multiple sensing modalities:
+- LiDAR: geometric structure and accurate distance estimation
+- Cameras: semantic, texture, and appearance information
+- Radar: complementary range and motion information
 
-Two state-of-the-art architectures were evaluated:
+The detection task must operate under diverse urban driving conditions including:
+- varying object distances
+- occlusions
+- low visibility conditions
+- dense traffic scenes
+- dynamic environments
+
+The final objective is to place accurate 3D bounding boxes around surrounding objects while maintaining robust detection performance across all driving scenarios.
+
+### Project Scope
+
+This project compares:
 - CenterPoint, a LiDAR-based 3D object detection baseline
 - BEVFusion, a multimodal fusion framework combining camera and LiDAR information in bird’s-eye-view (BEV) space
 
+Due to the large storage and computational requirements of the full dataset, reduced subsets (20% and 40%) were generated to accelerate experimentation while maintaining representative training conditions.
+
 The project was implemented using MMDetection3D and PyTorch, with training executed on Simple Linux Utility for Resource Management (SLURM)-based High Performance Computing (HPC) infrastructure using NVIDIA RTX 4090 and NVIDIA A100 Graphics Processing Unit (GPU) platforms.
+
+### Evaluation Metrics
 
 Model evaluation was performed using the official nuScenes validation metrics including:
 - NuScenes Detection Score (NDS)
@@ -44,18 +78,21 @@ Model evaluation was performed using the official nuScenes validation metrics in
 
 ## Objectives
 
-The objective of this project was to evaluate the impact of multimodal sensor fusion on 3D object detection performance using the nuScenes dataset.
+The objective of this project was to investigate multimodal perception for autonomous driving using the nuScenes dataset, with a particular focus on 3D object detection and sensor fusion.
 
-The project focused on:
-- Comparing a LiDAR-only baseline with a camera–LiDAR fusion approach
-- Evaluating the CenterPoint baseline and the BEVFusion model
-- Conducting controlled experiments on reduced nuScenes subsets (20% and 40%)
-- Analyzing performance using standard nuScenes evaluation metrics
+The work focused on:
+- performing exploratory data analysis (EDA) of the nuScenes sensing modalities and annotations
+- studying the characteristics and interactions of different sensing modalities
+- comparing unimodal and multimodal 3D object detection approaches
+- evaluating the impact of sensor fusion on detection performance
+
+## Repository Structure
 
 ## Repository Structure
 
 ```text
 .
+├── cache/                              # Cached full-dataset feature DataFrames used to avoid expensive recomputation
 ├── data/                               # nuScenes dataset and generated subsets
 ├── external/
 │   ├── mmcv/                           # MMCV dependency repository
@@ -166,6 +203,18 @@ The project followed a structured experimentation pipeline:
 ## Results
 
 The experiments compared the CenterPoint LiDAR-only baseline with the BEVFusion camera–LiDAR fusion model on reduced nuScenes subsets containing 20% and 40% of the original training data.
+
+### Exploratory Data Analysis (EDA) Findings
+
+The exploratory data analysis was performed on the full nuScenes train/validation dataset to investigate modality behavior across object categories, distance ranges, and visibility conditions.
+
+Key observations:
+- Camera and LiDAR consistently provide stronger support than radar across most operating conditions.
+- LiDAR becomes more reliable at long range and under high-visibility conditions.
+- Pedestrians and small objects remain the most challenging categories.
+- Camera and LiDAR exhibit complementary behavior across distance and visibility regimes.
+
+These observations motivated the comparison between a LiDAR-only baseline and a camera–LiDAR fusion approach for 3D object detection.
 
 ### Global Performance
 
