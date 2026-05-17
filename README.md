@@ -9,15 +9,29 @@ This project investigates multimodal 3D object detection for autonomous driving 
 
 The nuScenes dataset is a large-scale multimodal autonomous driving dataset composed of 1000 driving scenes including:
 - LiDAR data
-- Camera data
+- Multi-view camera data
 - Radar data
 - Global Positioning System (GPS) information
-- High-definition map information
+- High-definition semantic map information
 - 3D object annotations
+
+The dataset provides:
+- 6 cameras
+- 1 LiDAR sensor
+- 5 radar sensors
+- full 360° sensor coverage around the ego vehicle
 
 The full train/validation dataset contains:
 - approximately 1.4 million camera images
 - more than 390,000 LiDAR sweeps
+- approximately 1.3 million radar point clouds
+
+nuScenes annotations are provided on keyframes sampled at 2 Hz (one annotated frame every 0.5 seconds).
+
+The dataset includes:
+- daytime and nighttime driving
+- rainy and clear weather conditions
+- urban driving scenes from Boston and Singapore
 
 The nuScenes test set does not provide public annotations, requiring prediction submission to the official nuScenes evaluation server for final benchmark evaluation.
 
@@ -113,8 +127,6 @@ The work focused on:
 The official nuScenes train/validation split contains:
 - 700 training scenes
 - 150 validation scenes
-- approximately 1.4 million camera images
-- more than 390,000 LiDAR sweeps
 
 Training on the full dataset typically requires multiple Graphics Processing Units (GPUs), large storage capacity, and significant computational resources. In this project, experiments were conducted using a single GPU setup, motivating the use of reduced dataset subsets to maintain manageable training times and resource usage.
 
