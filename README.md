@@ -21,6 +21,8 @@ The dataset provides:
 - 5 radar sensors
 - full 360° sensor coverage around the ego vehicle
 
+![](https://www.nuscenes.org/static/media/data.9ef46c59.png)
+
 The full train/validation dataset contains:
 - approximately 1.4 million camera images
 - more than 390,000 LiDAR sweeps
