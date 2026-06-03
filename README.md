@@ -1,325 +1,259 @@
-# Multimodal 3D Object Detection on nuScenes:
-# CenterPoint vs BEVFusion on Reduced Dataset Subsets
+# Multimodal 3D Object Detection on nuScenes
+## CenterPoint vs BEVFusion on Reduced Dataset Subsets
+
+**Author:** Adyl El Guamra  
+**Program:** CAS Advanced Machine Learning, University of Bern  
+**Year:** 2026
 
 ## Project Overview
 
-This project investigates multimodal 3D object detection for autonomous driving using the nuScenes dataset. The work focuses on comparing a LiDAR-only baseline with a camera–LiDAR fusion approach through controlled experiments on reduced dataset subsets.
+This project investigates multimodal 3D object detection for autonomous driving using the nuScenes dataset.
 
-### nuScenes Dataset
+The objective is to compare:
 
-The nuScenes dataset is a large-scale multimodal autonomous driving dataset composed of 1000 driving scenes including:
-- LiDAR data
-- Multi-view camera data
-- Radar data
-- Global Positioning System (GPS) information
-- High-definition semantic map information
-- 3D object annotations
+- **CenterPoint** — a LiDAR-only 3D object detector
+- **BEVFusion** — a camera–LiDAR fusion framework operating in Bird's-Eye View (BEV) space
 
-The dataset provides:
+To enable experimentation on limited computational resources, reduced training subsets containing **20%** and **40%** of the original nuScenes training set were generated. The models were trained and evaluated using the OpenMMLab ecosystem (MMDetection3D) on GPU-based HPC infrastructure.
+
+### Dataset
+
+The experiments use the **nuScenes** autonomous driving dataset, which provides synchronized multimodal sensor data with full 360° coverage around the ego vehicle:
+
 - 6 cameras
 - 1 LiDAR sensor
 - 5 radar sensors
-- full 360° sensor coverage around the ego vehicle
+- GPS and vehicle pose information
+- HD semantic maps
+- 3D object annotations
+
+The dataset contains urban driving scenes collected in **Boston** and **Singapore** under diverse traffic, weather, and lighting conditions.
 
 ![](https://www.nuscenes.org/static/media/data.9ef46c59.png)
 
-The full train/validation dataset contains:
-- approximately 1.4 million camera images
-- more than 390,000 LiDAR sweeps
-- approximately 1.3 million radar point clouds
+### Task
 
-nuScenes annotations are provided on keyframes sampled at 2 Hz (one annotated frame every 0.5 seconds).
+The project focuses on **3D object detection**, where the goal is to detect surrounding traffic participants and estimate:
 
-The dataset includes:
-- daytime and nighttime driving
-- rainy and clear weather conditions
-- urban driving scenes from Boston and Singapore
-
-The nuScenes test set does not provide public annotations, requiring prediction submission to the official nuScenes evaluation server for final benchmark evaluation.
-
-### nuScenes Tasks
-
-The nuScenes benchmark includes several autonomous driving tasks:
-- Detection: 3D object detection and localization
-- Tracking: temporal association of detected objects across frames
-- Prediction: forecasting future trajectories of dynamic agents
-- LiDAR Segmentation: point-wise semantic segmentation of LiDAR data
-- Panoptic Segmentation: joint semantic and instance segmentation
-- Planning: autonomous driving trajectory planning
-
-### 3D Object Detection Task
-
-The task considered in this project is 3D object detection for autonomous driving.
-
-The objective is to detect relevant traffic participants surrounding the ego vehicle and estimate:
 - object class
 - 3D position
-- object dimensions
-- orientation in 3D space
+- dimensions
+- orientation
 
-The benchmark evaluates detection performance using multiple sensing modalities:
-- LiDAR: geometric structure and accurate distance estimation
-- Cameras: semantic, texture, and appearance information
-- Radar: complementary range and motion information
+Performance is evaluated using the official nuScenes detection metrics:
 
-The detection task must operate under diverse urban driving conditions including:
-- varying object distances
-- occlusions
-- low visibility conditions
-- dense traffic scenes
-- dynamic environments
-
-The final objective is to place accurate 3D bounding boxes around surrounding objects while maintaining robust detection performance across all driving scenarios.
-
-### Project Scope
-
-This project compares:
-- CenterPoint, a LiDAR-based 3D object detection baseline
-- BEVFusion, a multimodal fusion framework combining camera and LiDAR information in bird’s-eye-view (BEV) space
-
-Due to the large storage and computational requirements of the full dataset, reduced subsets (20% and 40%) were generated to accelerate experimentation while maintaining representative training conditions.
-
-The project was implemented using MMDetection3D and PyTorch, with training executed on Simple Linux Utility for Resource Management (SLURM)-based High Performance Computing (HPC) infrastructure using NVIDIA RTX 4090 and NVIDIA A100 Graphics Processing Unit (GPU) platforms.
-
-### Evaluation Metrics
-
-Model evaluation was performed using the official nuScenes validation metrics including:
-- NuScenes Detection Score (NDS)
-- mean Average Precision (mAP)
-- mean Average Translation Error (mATE)
-- mean Average Scale Error (mASE)
-- mean Average Orientation Error (mAOE)
-- mean Average Velocity Error (mAVE)
-- mean Average Attribute Error (mAAE)
+- NDS (NuScenes Detection Score)
+- mAP (mean Average Precision)
+- mATE (Translation Error)
+- mASE (Scale Error)
+- mAOE (Orientation Error)
+- mAVE (Velocity Error)
+- mAAE (Attribute Error)
 
 ## Objectives
 
-The objective of this project was to investigate multimodal perception for autonomous driving using the nuScenes dataset, with a particular focus on 3D object detection and sensor fusion.
+The objective of this project was to investigate the impact of multimodal sensor fusion on 3D object detection performance for autonomous driving.
 
 The work focused on:
-- performing exploratory data analysis (EDA) of the nuScenes sensing modalities and annotations
-- studying the characteristics and interactions of different sensing modalities
-- comparing unimodal and multimodal 3D object detection approaches
-- evaluating the impact of sensor fusion on detection performance
 
-## Repository Structure
+- performing exploratory data analysis (EDA) of the nuScenes dataset and sensing modalities
+- studying the characteristics of camera, LiDAR, and radar data
+- comparing a LiDAR-only baseline (**CenterPoint**) with a camera–LiDAR fusion approach (**BEVFusion**)
+- evaluating the effect of sensor fusion on detection performance across object classes
+- assessing the feasibility of training state-of-the-art 3D detection models on reduced dataset subsets (20% and 40%)
+
+The final goal was to determine whether multimodal fusion provides measurable performance improvements over a LiDAR-only approach under constrained computational resources.
 
 ## Repository Structure
 
 ```text
 .
-├── cache/                              # Cached full-dataset feature DataFrames used to avoid expensive recomputation
+├── cache/                              # Cached EDA outputs and intermediate datasets
 ├── data/                               # nuScenes dataset and generated subsets
 ├── external/
-│   ├── mmcv/                           # MMCV dependency repository
-│   └── mmdetection3d/                  # OpenMMLab 3D object detection framework
+│   ├── mmcv/                           # MMCV dependency
+│   └── mmdetection3d/                  # OpenMMLab 3D detection framework
 │       ├── configs/
-│       │   └── my_experiments/         # Custom CenterPoint and BEVFusion experiment configurations
-│       └── work_dirs/                  # Training outputs, checkpoints, and experiment results
-├── notebooks/                          # Jupyter notebooks for EDA, training, and evaluation
-├── results/                            # Evaluation outputs and generated figures
-├── slurm/                              # SLURM job scripts and HPC experiment folders
-├── environment.yml                     # Conda environment definition
-├── environment_ubelix.yml              # Ubelix HPC environment definition
+│       │   └── my_experiments/         # Custom CenterPoint and BEVFusion configurations
+│       └── work_dirs/                  # Training logs, checkpoints, and outputs
+├── notebooks/                          # EDA, dataset preparation, training, and evaluation
+├── results/                            # Final metrics, tables, and figures
+├── slurm/                              # HPC job scripts and experiment folders
+├── environment.yml                     # Local Conda environment
+├── environment_ubelix.yml              # Ubelix HPC Conda environment
 └── README.md
 ```
+
+Dataset preparation follows the official MMDetection3D nuScenes guide:
+
+https://github.com/open-mmlab/mmdetection3d/blob/main/docs/en/advanced_guides/datasets/nuscenes.md
+
 
 ## Dataset
 
 The official nuScenes train/validation split contains:
+
 - 700 training scenes
 - 150 validation scenes
 
-Training on the full dataset typically requires multiple Graphics Processing Units (GPUs), large storage capacity, and significant computational resources. In this project, experiments were conducted using a single GPU setup, motivating the use of reduced dataset subsets to maintain manageable training times and resource usage.
+Training on the full dataset requires substantial storage and computational resources. Since this project was conducted using a single-GPU setup, reduced training subsets were created to enable faster experimentation while preserving representative driving scenarios and object distributions.
 
-Due to the size of the dataset and storage quota limitations on the Ubelix High Performance Computing (HPC) cluster, the full dataset was stored on shared scratch storage (`/rs_scratch/users/ae04q066`) while persistent storage was reserved for code, environments, and lightweight datasets. Symbolic links were used inside the `data/` directory to connect the project structure with the dataset storage location without duplicating files.
+The following subsets were generated from the original training set:
 
-To accelerate experimentation and reduce training time, reduced subsets containing 20% and 40% of the original training data were generated while preserving representative driving scenarios and object distributions.
+- 20% subset
+- 40% subset
 
-The nuScenes test set does not provide public annotations. Final benchmark evaluation therefore requires prediction submission to the official nuScenes evaluation server.
+Due to storage quota limitations on the Ubelix HPC cluster, the full nuScenes dataset was stored on shared scratch storage. Symbolic links were used to connect the project `data/` directory to the dataset location required by MMDetection3D.
+
+All model evaluation was performed on the official nuScenes validation set.
+
+> **Note:** The nuScenes test set does not provide public annotations. Final benchmark evaluation therefore requires submission to the official nuScenes evaluation server.
 
 ## Models
 
-Autonomous driving perception systems can use different sensor fusion strategies depending on the available modalities and the target task. Common approaches include:
-- Camera-only perception
-- LiDAR-only perception
-- Radar-based perception
-- Early fusion: combining raw sensor data before feature extraction
-- Late fusion: combining predictions from independent sensor pipelines
-- Bird’s-eye-view (BEV) fusion: combining sensor features in a shared spatial representation
-
-This project focuses on comparing a LiDAR-only baseline with a camera–LiDAR fusion approach for 3D object detection.
-
-LiDAR provides accurate geometric and distance information, while cameras provide rich semantic and texture information. Combining both modalities can improve object detection robustness and scene understanding, particularly in complex urban driving environments.
+This project compares a LiDAR-only baseline with a multimodal camera–LiDAR fusion approach for 3D object detection.
 
 ### CenterPoint
 
-CenterPoint is a LiDAR-based 3D object detection framework using center-based object representation in bird’s-eye-view (BEV) space. In this project, it was used as the LiDAR-only baseline model.
+CenterPoint is a LiDAR-based 3D object detection framework that represents objects by their center points in Bird's-Eye View (BEV) space. It was used as the baseline model to evaluate the performance of LiDAR-only perception.
 
-Paper:
+**Reference:**
 - [Center-based 3D Object Detection and Tracking](https://arxiv.org/abs/2006.11275)
 
 ### BEVFusion
 
-BEVFusion is a multimodal 3D object detection framework combining camera and LiDAR information through a unified bird’s-eye-view (BEV) representation. The model was evaluated to study the impact of multimodal sensor fusion on detection performance.
+BEVFusion is a multimodal 3D object detection framework that combines camera and LiDAR information within a unified Bird's-Eye View (BEV) representation. It was evaluated to measure the impact of multimodal sensor fusion on detection performance.
 
-Paper:
+**Reference:**
 - [BEVFusion: Multi-Task Multi-Sensor Fusion with Unified Bird's-Eye View Representation](https://arxiv.org/abs/2205.13542)
+
+### Motivation
+
+The exploratory data analysis (EDA) performed on the nuScenes dataset indicated that camera and LiDAR modalities provide complementary information for 3D object detection. These observations motivated the comparison between a LiDAR-only approach (CenterPoint) and a camera–LiDAR fusion approach (BEVFusion).
 
 ## Experimental Setup
 
-The experiments were implemented using:
-- Python 3.8
-- PyTorch
-- MMDetection3D
-- MMCV
-- MMEngine
-- nuScenes devkit
+The experiments were implemented using the OpenMMLab 3D detection stack and trained on the Ubelix HPC cluster using SLURM for resource management.
 
-Training was executed on the Ubelix High Performance Computing (HPC) cluster using SLURM for GPU job scheduling and resource management.
+### Software
 
-Experiments were conducted using:
-- NVIDIA RTX 4090 GPUs
-- NVIDIA A100 GPUs
-
-Separate experiment configurations were created for:
-- CenterPoint baseline experiments
-- BEVFusion experiments
-- 20% and 40% dataset subsets
-
-Training outputs, checkpoints, logs, and evaluation results were organized using dedicated experiment folders inside the MMDetection3D `work_dirs/` structure.
-
-## Workflow
-
-The project followed a structured experimentation pipeline:
-
-1. Exploratory Data Analysis (EDA)
-   - Analysis of the nuScenes dataset structure, annotations, and sensor modalities
-   - Visualization of scenes, object classes, and spatial distributions
-
-2. Dataset Preparation
-   - Generation of reduced training subsets (20% and 40%)
-   - Preparation of dataset metadata and training information files
-
-3. Model Training
-   - Training of the CenterPoint LiDAR-only baseline
-   - Training of the BEVFusion camera–LiDAR fusion model
-   - Execution on SLURM-managed GPU resources
-
-4. Evaluation
-   - Validation using official nuScenes detection metrics
-   - Extraction and aggregation of performance metrics
-
-5. Comparative Analysis
-   - Comparison of LiDAR-only and multimodal fusion performance
-   - Analysis of accuracy and computational tradeoffs
-
-## Results
-
-The experiments compared the CenterPoint LiDAR-only baseline with the BEVFusion camera–LiDAR fusion model on reduced nuScenes subsets containing 20% and 40% of the original training data.
-
-### Exploratory Data Analysis (EDA) Findings
-
-The exploratory data analysis was performed on the full nuScenes train/validation dataset to investigate modality behavior across object categories, distance ranges, and visibility conditions.
-
-Key observations:
-- Camera and LiDAR consistently provide stronger support than radar across most operating conditions.
-- LiDAR becomes more reliable at long range and under high-visibility conditions.
-- Pedestrians and small objects remain the most challenging categories.
-- Camera and LiDAR exhibit complementary behavior across distance and visibility regimes.
-
-These observations motivated the comparison between a LiDAR-only baseline and a camera–LiDAR fusion approach for 3D object detection.
-
-### Global Performance
-
-The best overall results were obtained with BEVFusion on the 40% subset:
-
-| Model | Subset | NDS | mAP |
-|---|---|---|---|
-| CenterPoint | 20% | 0.487 | 0.398 |
-| CenterPoint | 40% | 0.571 | 0.478 |
-| BEVFusion | 20% | 0.469 | 0.449 |
-| BEVFusion | 40% | **0.611** | **0.550** |
-
-The best BEVFusion 40% experiment achieved:
-- NuScenes Detection Score (NDS): **0.6113**
-- mean Average Precision (mAP): **0.5499**
-
-### Error Metrics
-
-BEVFusion 40% also achieved the best global error metrics:
-- mean Average Translation Error (mATE): 0.3126
-- mean Average Scale Error (mASE): 0.2803
-- mean Average Orientation Error (mAOE): 0.4777
-- mean Average Velocity Error (mAVE): 0.3700
-- mean Average Attribute Error (mAAE): 0.1966
-
-### Per-Class Performance
-
-The fusion model showed significant improvements for several object classes, particularly:
-- bicycle
-- motorcycle
-- traffic cone
-- pedestrian
-
-The largest fusion gains were observed for:
-- bicycle: +0.190 Average Precision (AP)
-- motorcycle: +0.185 AP
-- traffic cone: +0.175 AP
-
-Some classes such as buses showed stronger performance with the LiDAR-only baseline, highlighting that multimodal fusion benefits can vary depending on object characteristics and sensor dependencies.
-
-### Training Dynamics
-
-Across all experiments:
-- performance improved consistently over training epochs
-- larger subsets improved both detection accuracy and stability
-- BEVFusion achieved the highest final performance but required significantly greater computational resources
-- reduced subsets enabled practical experimentation within a single GPU training setup
-
-## Environment Setup
-
-The project was developed with Python 3.8 and the OpenMMLab 3D detection stack.
-
-Main framework versions:
-
-| Package | Version |
-|---|---:|
+| Component | Version |
+|------------|---------:|
+| Python | 3.8 |
+| PyTorch | 2.4.1 |
 | MMEngine | 0.10.7 |
 | MMDetection | 3.2.0 |
 | MMDetection3D | 1.4.0 |
 
-The environment can be recreated from the provided Conda files:
+### Hardware
 
-```bash
-conda env create -f environment_ubelix.yml
-conda activate py38_mmdet3d
-```
+Experiments were conducted on single-GPU nodes using:
 
-Official MMDetection3D nuScenes setup guide:
-https://github.com/open-mmlab/mmdetection3d/blob/main/docs/en/advanced_guides/datasets/nuscenes.md
+- NVIDIA RTX 4090 GPUs
+- NVIDIA A100 GPUs
+
+### Experiments
+
+Four experiments were performed:
+
+| Model | Training Subset |
+|---------|---------:|
+| CenterPoint | 20% |
+| CenterPoint | 40% |
+| BEVFusion | 20% |
+| BEVFusion | 40% |
+
+Training outputs, checkpoints, logs, and evaluation results were stored within the MMDetection3D `work_dirs/` directory.
+
+## Workflow
+
+The project followed the workflow below:
+
+1. **Exploratory Data Analysis (EDA)**
+   - Analysis of sensor modalities, annotations, and object distributions
+   - Investigation of modality behavior across distance and visibility conditions
+
+2. **Dataset Preparation**
+   - Generation of reduced training subsets (20% and 40%)
+   - Creation of MMDetection3D-compatible dataset files
+
+3. **Model Training**
+   - Training of CenterPoint (LiDAR-only)
+   - Training of BEVFusion (camera–LiDAR fusion)
+
+4. **Evaluation**
+   - Validation using official nuScenes detection metrics
+   - Aggregation of experiment results
+
+5. **Comparative Analysis**
+   - Comparison of detection performance across models and dataset sizes
+   - Analysis of multimodal fusion benefits and trade-offs
+
+   ## Results
+
+### EDA Findings
+
+The exploratory data analysis performed on the full nuScenes train/validation dataset revealed that camera and LiDAR modalities provide complementary information for 3D object detection.
+
+Key observations included:
+
+- camera and LiDAR consistently provided stronger support than radar across most operating conditions
+- LiDAR became increasingly reliable at long range and under high-visibility conditions
+- pedestrians and small objects remained the most challenging categories
+- modality strengths varied across distance and visibility regimes
+
+These findings motivated the comparison between a LiDAR-only baseline (CenterPoint) and a camera–LiDAR fusion approach (BEVFusion).
+
+### Global Performance
+
+| Model | Subset | NDS | mAP |
+|---|---|---:|---:|
+| CenterPoint | 20% | 0.4851 | 0.3980 |
+| BEVFusion | 20% | 0.4686 | 0.4489 |
+| CenterPoint | 40% | 0.5712 | 0.4773 |
+| BEVFusion | 40% | **0.6092** | **0.5490** |
+
+The best overall performance was achieved by **BEVFusion trained on the 40% subset**, reaching:
+
+- **NuScenes Detection Score (NDS):** 0.6092
+- **mean Average Precision (mAP):** 0.5490
+
+Increasing the training subset from 20% to 40% improved performance for both models, with the largest gains observed for BEVFusion.
+
+### Per-Class Performance
+
+Average Precision (**AP**) measures the detection performance of a single object class by combining precision and recall across different confidence thresholds. Higher values indicate better detection performance.
+
+The largest gains obtained by BEVFusion over CenterPoint were observed for:
+
+| Class | AP Gain (20%) | AP Gain (40%) |
+|---|---:|---:|
+| Bicycle | +0.110 | **+0.193** |
+| Motorcycle | +0.142 | **+0.184** |
+| Traffic Cone | +0.228 | **+0.173** |
+
+These results indicate that camera–LiDAR fusion provides the greatest benefit for smaller and more challenging object classes, where semantic information from camera images complements LiDAR geometry.
+
+### Key Findings
+
+- Increasing the training subset from 20% to 40% consistently improved detection performance.
+- BEVFusion achieved the highest overall detection accuracy.
+- Camera–LiDAR fusion provided the largest gains for bicycles, motorcycles, and traffic cones.
+- Reduced subsets enabled practical experimentation on a single-GPU training setup while preserving meaningful model comparisons.
 
 ## References
 
-This project builds on the following works, frameworks, and official documentation:
-
-### nuScenes
+### Dataset
 
 - [nuScenes Website](https://www.nuscenes.org/nuscenes#overview)
-- [nuScenes: A multimodal dataset for autonomous driving](https://openaccess.thecvf.com/content_CVPR_2020/papers/Caesar_nuScenes_A_Multimodal_Dataset_for_Autonomous_Driving_CVPR_2020_paper.pdf)
+- [nuScenes: A Multimodal Dataset for Autonomous Driving](https://openaccess.thecvf.com/content_CVPR_2020/papers/Caesar_nuScenes_A_Multimodal_Dataset_for_Autonomous_Driving_CVPR_2020_paper.pdf)
 - [nuScenes Devkit](https://github.com/nutonomy/nuscenes-devkit)
 
 ### Models
 
 - [Center-based 3D Object Detection and Tracking](https://arxiv.org/abs/2006.11275)
-- [CenterPoint MMDetection3D Configuration](https://github.com/open-mmlab/mmdetection3d/tree/main/configs/centerpoint)
-
 - [BEVFusion: Multi-Task Multi-Sensor Fusion with Unified Bird's-Eye View Representation](https://arxiv.org/abs/2205.13542)
-- [BEVFusion MMDetection3D Project](https://github.com/open-mmlab/mmdetection3d/tree/main/projects/BEVFusion)
 
-### Frameworks
+### Framework
 
-- [MMDetection3D nuScenes Dataset Preparation Guide](https://github.com/open-mmlab/mmdetection3d/blob/main/docs/en/advanced_guides/datasets/nuscenes.md)
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d)
-- [MMEngine](https://github.com/open-mmlab/mmengine)
-- [MMCV](https://github.com/open-mmlab/mmcv)
