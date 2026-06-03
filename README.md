@@ -9,13 +9,6 @@
 
 This project investigates multimodal 3D object detection for autonomous driving using the nuScenes dataset.
 
-The objective is to compare:
-
-- **CenterPoint** — a LiDAR-only 3D object detector
-- **BEVFusion** — a camera–LiDAR fusion framework operating in Bird's-Eye View (BEV) space
-
-To enable experimentation on limited computational resources, reduced training subsets containing **20%** and **40%** of the original nuScenes training set were generated. The models were trained and evaluated using the OpenMMLab ecosystem (MMDetection3D) on GPU-based HPC infrastructure.
-
 ### Dataset
 
 The experiments use the **nuScenes** autonomous driving dataset, which provides synchronized multimodal sensor data with full 360° coverage around the ego vehicle:
@@ -127,10 +120,6 @@ BEVFusion is a multimodal 3D object detection framework that combines camera and
 **Reference:**
 - [BEVFusion: Multi-Task Multi-Sensor Fusion with Unified Bird's-Eye View Representation](https://arxiv.org/abs/2205.13542)
 
-### Motivation
-
-The exploratory data analysis (EDA) performed on the nuScenes dataset indicated that camera and LiDAR modalities provide complementary information for 3D object detection. These observations motivated the comparison between a LiDAR-only approach (CenterPoint) and a camera–LiDAR fusion approach (BEVFusion).
-
 ## Experimental Setup
 
 The experiments were implemented using the OpenMMLab 3D detection stack and trained on the Ubelix HPC cluster using SLURM for resource management.
@@ -189,7 +178,7 @@ The project followed the workflow below:
    - Comparison of detection performance across models and dataset sizes
    - Analysis of multimodal fusion benefits and trade-offs
 
-   ## Results
+## Results
 
 ### EDA Findings
 
@@ -206,12 +195,12 @@ These findings motivated the comparison between a LiDAR-only baseline (CenterPoi
 
 ### Global Performance
 
-| Model | Subset | NDS | mAP |
+| Subset | Model | NDS | mAP |
 |---|---|---:|---:|
-| CenterPoint | 20% | 0.4851 | 0.3980 |
-| BEVFusion | 20% | 0.4686 | 0.4489 |
-| CenterPoint | 40% | 0.5712 | 0.4773 |
-| BEVFusion | 40% | **0.6092** | **0.5490** |
+| 20% | CenterPoint | 0.4851 | 0.3980 |
+| 20% | BEVFusion | 0.4686 | 0.4489 |
+| 40% | CenterPoint | 0.5712 | 0.4773 |
+| 40% | BEVFusion | **0.6092** | **0.5490** |
 
 The best overall performance was achieved by **BEVFusion trained on the 40% subset**, reaching:
 
@@ -240,6 +229,8 @@ These results indicate that camera–LiDAR fusion provides the greatest benefit 
 - BEVFusion achieved the highest overall detection accuracy.
 - Camera–LiDAR fusion provided the largest gains for bicycles, motorcycles, and traffic cones.
 - Reduced subsets enabled practical experimentation on a single-GPU training setup while preserving meaningful model comparisons.
+
+Overall, the results demonstrate that camera–LiDAR fusion improves 3D object detection performance on nuScenes, with the largest benefits observed for smaller and more challenging object classes.
 
 ## References
 
